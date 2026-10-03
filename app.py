@@ -5,6 +5,27 @@ import plotly.graph_objects as go
 from datetime import date
 import os
 
+# ==========================================
+# SEGURIDAD: CONTROL DE ACCESO
+# ==========================================
+def verificar_acceso():
+    if "autenticado" not in st.session_state:
+        st.session_state.autenticado = False
+
+    if not st.session_state.autenticado:
+        st.title("🔒 Acceso Privado")
+        st.caption("Panel personal de control nutricional y composición corporal.")
+        clave_ingresada = st.text_input("Ingresa tu contraseña:", type="password")
+        if st.button("Ingresar", use_container_width=True):
+            clave_correcta = st.secrets.get("APP_PASSWORD", "Carla2019")
+            if clave_ingresada == clave_correcta:
+                st.session_state.autenticado = True
+                st.rerun()
+            else:
+                st.error("Contraseña incorrecta. Inténtalo de nuevo.")
+        st.stop()
+
+verificar_acceso()
 st.set_page_config(
     page_title="Control Nutricional & Composición",
     page_icon="⚖️",
