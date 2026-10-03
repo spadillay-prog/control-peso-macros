@@ -5,204 +5,298 @@ import plotly.graph_objects as go
 from datetime import date
 import os
 
-st.set_page_config(page_title="Control Corporal & Nutrición", page_icon="📊", layout="wide")
+st.set_page_config(
+    page_title="Control Nutricional & Composición",
+    page_icon="⚖️",
+    layout="wide",
+    initial_sidebar_state="collapsed"
+)
 
 FILE_HISTORICO = "historico_corporal.csv"
-FILE_CONSUMO = "consumo_diario.csv"
+FILE_COMIDAS = "registro_comidas_detalle.csv"
+FILE_DIARIO = "resumen_diario_macros.csv"
 
-# Catálogo predefinido con tus alimentos habituales
-CATALOGO_ALIMENTOS = {
-    "Huevo entero (u)": {"tipo": "unidad", "cal": 72, "p": 6.3, "c": 0.4, "g": 4.8},
-    "Pechuga de pollo cocida (g)": {"tipo": "gramos", "cal": 165, "p": 31.0, "c": 0.0, "g": 3.6},
-    "Pan integral (g)": {"tipo": "gramos", "cal": 250, "p": 9.0, "c": 45.0, "g": 3.0},
-    "Avena integral (g)": {"tipo": "gramos", "cal": 375, "p": 13.0, "c": 60.0, "g": 7.0},
-    "Whey Protein QNT (g)": {"tipo": "gramos", "cal": 383, "p": 81.6, "c": 6.6, "g": 5.0},
-    "Leche descremada Colún (ml)": {"tipo": "gramos", "cal": 32, "p": 3.1, "c": 4.7, "g": 0.1},
-    "Loncoleche Protein en polvo (g)": {"tipo": "gramos", "cal": 400, "p": 52.5, "c": 37.5, "g": 5.0},
-    "Papas cocidas (g)": {"tipo": "gramos", "cal": 87, "p": 2.0, "c": 20.1, "g": 0.1},
-    "Semillas de chía (g)": {"tipo": "gramos", "cal": 486, "p": 16.5, "c": 42.0, "g": 31.0},
-    "Frutos rojos / Berries (g)": {"tipo": "gramos", "cal": 50, "p": 1.0, "c": 11.0, "g": 0.4},
-    "Manzana roja (u mediana ~150g)": {"tipo": "unidad", "cal": 78, "p": 0.4, "c": 20.7, "g": 0.3},
-    "Bombón Frac (u)": {"tipo": "unidad", "cal": 60, "p": 0.6, "c": 7.2, "g": 3.3},
-    "Aceite en spray (1 spray ~0.3ml)": {"tipo": "unidad", "cal": 2.7, "p": 0.0, "c": 0.0, "g": 0.3},
-    "Alcachofa cocida (u mediana)": {"tipo": "unidad", "cal": 55, "p": 3.5, "c": 12.0, "g": 0.2},
-    "Sopa espárragos sobre (taza/porción)": {"tipo": "unidad", "cal": 55, "p": 1.2, "c": 9.5, "g": 1.5}
+ESTATURA_M = 1.91
+CAL_MIN, CAL_MAX = 1950, 2050
+PROT_MIN = 140
+
+# Catálogo completo: Básicos + Eventos / Antojos
+CATALOGO = {
+    # Básicos y Proteínas
+    "Pechuga de pollo cocida (g)": {"tipo": "g", "cal": 1.65, "p": 0.31, "c": 0.0, "g": 0.036},
+    "Huevo entero (u)": {"tipo": "u", "cal": 72.0, "p": 6.3, "c": 0.4, "g": 4.8},
+    "Clara de huevo (u)": {"tipo": "u", "cal": 17.0, "p": 3.6, "c": 0.2, "g": 0.1},
+    "Jurel al agua enlatado (g)": {"tipo": "g", "cal": 1.30, "p": 0.21, "c": 0.0, "g": 0.05},
+    "Tilapia / Pescado blanco (g)": {"tipo": "g", "cal": 0.96, "p": 0.20, "c": 0.0, "g": 0.017},
+    "Whey Protein QNT (g)": {"tipo": "g", "cal": 3.83, "p": 0.816, "c": 0.066, "g": 0.05},
+    "Loncoleche Protein en polvo (g)": {"tipo": "g", "cal": 4.00, "p": 0.525, "c": 0.375, "g": 0.05},
+    
+    # Carbohidratos y Frutas
+    "Avena integral (g)": {"tipo": "g", "cal": 3.75, "p": 0.13, "c": 0.60, "g": 0.07},
+    "Pan integral (g)": {"tipo": "g", "cal": 2.50, "p": 0.09, "c": 0.45, "g": 0.03},
+    "Arroz cocido (g)": {"tipo": "g", "cal": 1.30, "p": 0.027, "c": 0.28, "g": 0.003},
+    "Papas cocidas (g)": {"tipo": "g", "cal": 0.87, "p": 0.02, "c": 0.201, "g": 0.001},
+    "Manzana roja (u mediana ~150g)": {"tipo": "u", "cal": 78.0, "p": 0.4, "c": 20.7, "g": 0.3},
+    "Frutos rojos / Berries (g)": {"tipo": "g", "cal": 0.50, "p": 0.01, "c": 0.11, "g": 0.004},
+    "Plátano (u mediana ~100g)": {"tipo": "u", "cal": 89.0, "p": 1.1, "c": 22.8, "g": 0.3},
+    
+    # Lácteos y Grasas Saludables
+    "Leche descremada Colún (ml)": {"tipo": "g", "cal": 0.32, "p": 0.031, "c": 0.047, "g": 0.001},
+    "Yogurt Oikos Griego Natural (pote 150g)": {"tipo": "u", "cal": 135.0, "p": 7.0, "c": 7.5, "g": 8.0},
+    "Semillas de chía (g)": {"tipo": "g", "cal": 4.86, "p": 0.165, "c": 0.42, "g": 0.31},
+    "Aceite de oliva / vegetal (cda ~10g)": {"tipo": "u", "cal": 88.0, "p": 0.0, "c": 0.0, "g": 10.0},
+    "Aceite en spray (1 spray ~0.3ml)": {"tipo": "u", "cal": 2.7, "p": 0.0, "c": 0.0, "g": 0.3},
+    "Palta (g)": {"tipo": "g", "cal": 1.60, "p": 0.02, "c": 0.085, "g": 0.147},
+    
+    # Verduras / Extras
+    "Alcachofa cocida (u mediana)": {"tipo": "u", "cal": 55.0, "p": 3.5, "c": 12.0, "g": 0.2},
+    "Sopa espárragos sobre (taza preparada)": {"tipo": "u", "cal": 55.0, "p": 1.2, "c": 9.5, "g": 1.5},
+    "Hojas verdes (lechuga, espinaca)": {"tipo": "u", "cal": 0.0, "p": 0.0, "c": 0.0, "g": 0.0},
+    
+    # Antojos, Salidas y Eventos Sociales
+    "Bombón Frac (u)": {"tipo": "u", "cal": 60.0, "p": 0.6, "c": 7.2, "g": 3.3},
+    "Cerveza rubia tradicional (lata/botella 350ml)": {"tipo": "u", "cal": 150.0, "p": 1.5, "c": 12.5, "g": 0.0},
+    "Cerveza IPA o artesanal (copa/vaso 350ml)": {"tipo": "u", "cal": 210.0, "p": 2.0, "c": 18.0, "g": 0.0},
+    "Cerveza Sin Alcohol (lata 350ml)": {"tipo": "u", "cal": 70.0, "p": 1.0, "c": 15.0, "g": 0.0},
+    "Vino tinto (copa 150ml)": {"tipo": "u", "cal": 125.0, "p": 0.1, "c": 3.8, "g": 0.0},
+    "Pizza tradicional (1 porción/slice grande)": {"tipo": "u", "cal": 270.0, "p": 11.0, "c": 32.0, "g": 10.0},
+    "Hamburguesa tradicional con queso (unidad)": {"tipo": "u", "cal": 550.0, "p": 28.0, "c": 40.0, "g": 31.0},
+    "Papas fritas porción mediana (120g)": {"tipo": "u", "cal": 365.0, "p": 4.0, "c": 48.0, "g": 17.0}
 }
 
-def cargar_historico():
-    if os.path.exists(FILE_HISTORICO):
-        df = pd.read_csv(FILE_HISTORICO)
-        df["fecha"] = pd.to_datetime(df["fecha"]).dt.date
+def init_df(filename, cols):
+    if os.path.exists(filename):
+        df = pd.read_csv(filename)
+        if "fecha" in df.columns:
+            df["fecha"] = pd.to_datetime(df["fecha"]).dt.date
         return df
-    return pd.DataFrame(columns=["fecha", "peso_kg", "grasa_pct", "musculo_kg", "notas"])
+    return pd.DataFrame(columns=cols)
 
-def cargar_consumo():
-    if os.path.exists(FILE_CONSUMO):
-        df = pd.read_csv(FILE_CONSUMO)
-        df["fecha"] = pd.to_datetime(df["fecha"]).dt.date
-        return df
-    return pd.DataFrame(columns=["fecha", "calorias", "proteina_g", "carbos_g", "grasas_g"])
+df_hist = init_df(FILE_HISTORICO, ["fecha", "peso_kg", "grasa_pct", "musculo_pct", "kg_grasa", "kg_musculo", "imc", "notas"])
+df_comidas = init_df(FILE_COMIDAS, ["fecha", "tiempo", "alimento", "cantidad", "calorias", "proteina_g", "carbos_g", "grasas_g"])
+df_diario = init_df(FILE_DIARIO, ["fecha", "calorias", "proteina_g", "carbos_g", "grasas_g"])
 
-df_hist = cargar_historico()
-df_cons = cargar_consumo()
+st.title("⚡ Control Corporal & Nutricional")
 
-st.title("Panel de Control: Peso, Composición & Nutrición")
-
-# Barra lateral
+# ==========================================
+# BARRA LATERAL: IMPORTAR EXCEL & PESAJE
+# ==========================================
 with st.sidebar:
-    st.header("📂 Subir Excel Histórico")
-    archivo_subido = st.file_uploader("Arrastra tu archivo .xlsx", type=["xlsx", "xls"])
-    if archivo_subido is not None:
+    st.header("📂 Tu Histórico Excel")
+    archivo = st.file_uploader("Sube tu archivo .xlsx", type=["xlsx", "xls"])
+    if archivo is not None:
         try:
-            excel_df = pd.read_excel(archivo_subido)
-            st.write("Columnas detectadas:", list(excel_df.columns))
-            c_fecha = st.selectbox("Columna de Fecha", excel_df.columns)
-            c_peso = st.selectbox("Columna de Peso (kg)", excel_df.columns)
-            c_grasa = st.selectbox("Columna de % Grasa", ["No incluir"] + list(excel_df.columns))
-            c_musc = st.selectbox("Columna de Músculo", ["No incluir"] + list(excel_df.columns))
+            raw_excel = pd.read_excel(archivo)
+            st.write("Columnas:", list(raw_excel.columns))
+            c_f = st.selectbox("Fecha", raw_excel.columns)
+            c_p = st.selectbox("Peso (kg)", raw_excel.columns)
+            c_g = st.selectbox("% Grasa", ["No incluir"] + list(raw_excel.columns))
+            c_m = st.selectbox("% Músculo", ["No incluir"] + list(raw_excel.columns))
             
-            if st.button("Procesar e Importar"):
-                df_nuevo = pd.DataFrame()
-                df_nuevo["fecha"] = pd.to_datetime(excel_df[c_fecha]).dt.date
-                df_nuevo["peso_kg"] = pd.to_numeric(excel_df[c_peso], errors="coerce")
-                df_nuevo["grasa_pct"] = pd.to_numeric(excel_df[c_grasa], errors="coerce") if c_grasa != "No incluir" else None
-                df_nuevo["musculo_kg"] = pd.to_numeric(excel_df[c_musc], errors="coerce") if c_musc != "No incluir" else None
-                df_nuevo["notas"] = "Importado"
+            if st.button("📥 Importar Histórico"):
+                temp = pd.DataFrame()
+                temp["fecha"] = pd.to_datetime(raw_excel[c_f]).dt.date
+                temp["peso_kg"] = pd.to_numeric(raw_excel[c_p], errors="coerce")
+                temp["grasa_pct"] = pd.to_numeric(raw_excel[c_g], errors="coerce") if c_g != "No incluir" else None
+                temp["musculo_pct"] = pd.to_numeric(raw_excel[c_m], errors="coerce") if c_m != "No incluir" else None
                 
-                df_hist = pd.concat([df_hist, df_nuevo]).drop_duplicates(subset=["fecha"], keep="last").sort_values("fecha")
+                # Derivadas automáticas
+                temp["imc"] = (temp["peso_kg"] / (ESTATURA_M ** 2)).round(2)
+                temp["kg_grasa"] = ((temp["peso_kg"] * temp["grasa_pct"]) / 100.0).round(2) if c_g != "No incluir" else None
+                temp["kg_musculo"] = ((temp["peso_kg"] * temp["musculo_pct"]) / 100.0).round(2) if c_m != "No incluir" else None
+                temp["notas"] = "Excel Histórico"
+                
+                df_hist = pd.concat([df_hist, temp]).drop_duplicates(subset=["fecha"], keep="last").sort_values("fecha")
                 df_hist.to_csv(FILE_HISTORICO, index=False)
-                st.success("¡Datos históricos importados exitosamente!")
+                st.success("¡Datos históricos cargados!")
                 st.rerun()
         except Exception as e:
-            st.error(f"Error al leer: {e}")
+            st.error(f"Error: {e}")
 
     st.markdown("---")
-    st.header("⚖️ Registro Corporal Diario")
-    with st.form("form_corporal"):
-        f_corp = st.date_input("Fecha", value=date.today(), key="f_corp")
-        p_corp = st.number_input("Peso en ayunas (kg)", min_value=40.0, max_value=160.0, value=85.0, step=0.1)
-        g_corp = st.number_input("% Grasa (opcional)", min_value=0.0, max_value=60.0, value=20.0, step=0.1)
-        m_corp = st.number_input("Músculo kg (opcional)", min_value=0.0, max_value=100.0, value=65.0, step=0.1)
-        n_corp = st.text_input("Nota del día", placeholder="Día de piernas / pesaje normal")
-        if st.form_submit_button("Guardar Pesaje"):
-            nuevo_c = {"fecha": f_corp, "peso_kg": p_corp, "grasa_pct": g_corp, "musculo_kg": m_corp, "notas": n_corp}
-            df_hist = df_hist[df_hist["fecha"] != f_corp]
-            df_hist = pd.concat([df_hist, pd.DataFrame([nuevo_c])], ignore_index=True).sort_values("fecha")
+    st.header("⚖️ Registrar Pesaje Semanal / Diario")
+    with st.form("form_peso"):
+        f_reg = st.date_input("Fecha", value=date.today())
+        p_reg = st.number_input("Peso (kg)", min_value=40.0, max_value=160.0, value=85.0, step=0.1)
+        g_reg = st.number_input("% Grasa (ej: 22.5)", min_value=0.0, max_value=60.0, value=20.0, step=0.1)
+        m_reg = st.number_input("% Músculo (ej: 42.0)", min_value=0.0, max_value=80.0, value=40.0, step=0.1)
+        n_reg = st.text_input("Nota", placeholder="Pesaje en ayunas")
+        
+        if st.form_submit_button("Guardar Medición"):
+            imc_val = round(p_reg / (ESTATURA_M ** 2), 2)
+            kg_g_val = round((p_reg * g_reg) / 100.0, 2)
+            kg_m_val = round((p_reg * m_reg) / 100.0, 2)
+            
+            nueva_fila = {
+                "fecha": f_reg, "peso_kg": p_reg, "grasa_pct": g_reg,
+                "musculo_pct": m_reg, "kg_grasa": kg_g_val, "kg_musculo": kg_m_val,
+                "imc": imc_val, "notas": n_reg
+            }
+            df_hist = df_hist[df_hist["fecha"] != f_reg]
+            df_hist = pd.concat([df_hist, pd.DataFrame([nueva_fila])], ignore_index=True).sort_values("fecha")
             df_hist.to_csv(FILE_HISTORICO, index=False)
-            st.success("Pesaje guardado.")
+            st.success("¡Pesaje y composición registrados!")
             st.rerun()
 
-tab_calc, tab_graf, tab_datos = st.tabs(["🥣 Calculadora de Comidas", "📈 Gráficos y Tendencias", "📋 Historial Completo"])
+# ==========================================
+# PESTAÑAS PRINCIPALES
+# ==========================================
+tab_diario, tab_graficos, tab_tablas = st.tabs(["🍽️️ Registro del Día", "📈 Métricas & Gráficos", "📋 Historial"])
 
-with tab_calc:
-    st.subheader("Calculadora Rápida de Alimentos")
-    st.caption("Selecciona tus alimentos habituales. Las hojas verdes (lechuga, espinaca) son libres y no requieren registro.")
+# --- TAB 1: REGISTRO DIARIO Y COMPENSACIÓN ---
+with tab_diario:
+    dia_sel = st.date_input("Fecha a gestionar", value=date.today(), key="dia_activo")
     
-    fecha_comida = st.date_input("Fecha para registrar comidas", value=date.today(), key="f_comida")
+    # Filtrar comidas del día
+    comidas_hoy = df_comidas[df_comidas["fecha"] == dia_sel].copy() if not df_comidas.empty else pd.DataFrame()
     
-    if "comidas_temp" not in st.session_state:
-        st.session_state.comidas_temp = []
+    tot_cal = round(comidas_hoy["calorias"].sum(), 1) if not comidas_hoy.empty else 0.0
+    tot_prot = round(comidas_hoy["proteina_g"].sum(), 1) if not comidas_hoy.empty else 0.0
+    tot_carb = round(comidas_hoy["carbos_g"].sum(), 1) if not comidas_hoy.empty else 0.0
+    tot_fat = round(comidas_hoy["grasas_g"].sum(), 1) if not comidas_hoy.empty else 0.0
+    
+    # Tarjetas superiores estilo Dashboard
+    c1, c2, c3, c4 = st.columns(4)
+    cal_delta = tot_cal - CAL_MIN
+    prot_delta = tot_prot - PROT_MIN
+    
+    c1.metric("🔥 Calorías Consumidas", f"{tot_cal} kcal", delta=f"{int(cal_delta)} vs piso (1.950)")
+    c2.metric("🥩 Proteína Acumulada", f"{tot_prot} g", delta=f"{int(prot_delta)} vs piso (140g)")
+    c3.metric("🍞 Carbohidratos", f"{tot_carb} g")
+    c4.metric("🥑 Grasas", f"{tot_fat} g")
+    
+    # Calculadora de "Margen / Compensación"
+    st.markdown("#### 🎯 Estado de Metas y Compensación")
+    cal_pendientes_min = max(0.0, CAL_MIN - tot_cal)
+    cal_pendientes_max = max(0.0, CAL_MAX - tot_cal)
+    prot_pendiente = max(0.0, PROT_MIN - tot_prot)
+    
+    if tot_cal > CAL_MAX:
+        st.warning(f"⚠️ Te pasaste por **{int(tot_cal - CAL_MAX)} kcal** del techo diario. Prioriza cena liviana en hojas verdes y proteína magra.")
+    elif tot_cal >= CAL_MIN:
+        st.success(f"✅ ¡Estás en la ventana óptima de déficit! ({tot_cal} kcal). Margen restante hasta el techo: **{int(cal_pendientes_max)} kcal**.")
+    else:
+        st.info(f"💡 Te faltan entre **{int(cal_pendientes_min)} y {int(cal_pendientes_max)} kcal** para alcanzar tu rango objetivo. Proteína restante para cumplir el piso: **{int(prot_pendiente)} g**.")
 
-    c1, c2, c3 = st.columns([3, 2, 2])
-    with c1:
-        alim_elegido = st.selectbox("Alimento", list(CATALOGO_ALIMENTOS.keys()))
-    with c2:
-        info_al = CATALOGO_ALIMENTOS[alim_elegido]
-        label_cant = "Unidades" if info_al["tipo"] == "unidad" else "Gramos o ml"
-        val_default = 1.0 if info_al["tipo"] == "unidad" else 100.0
-        cant = st.number_input(f"Cantidad ({label_cant})", min_value=0.1, value=val_default, step=1.0)
-    with c3:
+    st.markdown("---")
+    
+    # Formulario para agregar comidas por bloque
+    st.subheader("➕ Agregar Alimento por Tiempo de Comida")
+    col_t1, col_t2, col_t3, col_t4 = st.columns([2, 3, 2, 2])
+    
+    with col_t1:
+        tiempo_sel = st.selectbox("Momento", ["Desayuno", "Almuerzo", "Merienda", "Cena", "Evento / Social"])
+    with col_t2:
+        alimento_sel = st.selectbox("Alimento / Producto", list(CATALOGO.keys()))
+    with col_t3:
+        info_al = CATALOGO[alimento_sel]
+        label_unid = "Unidades / Porciones" if info_al["tipo"] == "u" else "Gramos o ml"
+        val_ini = 1.0 if info_al["tipo"] == "u" else 100.0
+        cant_sel = st.number_input(label_unid, min_value=0.1, value=val_ini, step=1.0)
+    with col_t4:
         st.write("")
         st.write("")
-        if st.button("➕ Añadir Alimento"):
-            factor = cant if info_al["tipo"] == "unidad" else (cant / 100.0)
-            st.session_state.comidas_temp.append({
-                "alimento": alim_elegido,
-                "cantidad": cant,
-                "cal": round(info_al["cal"] * factor, 1),
-                "p": round(info_al["p"] * factor, 1),
-                "c": round(info_al["c"] * factor, 1),
-                "g": round(info_al["g"] * factor, 1)
-            })
+        if st.button("Añadir al Plato", use_container_width=True):
+            factor = cant_sel if info_al["tipo"] == "u" else (cant_sel)
+            c_calc = round(info_al["cal"] * factor, 1)
+            p_calc = round(info_al["p"] * factor, 1)
+            car_calc = round(info_al["c"] * factor, 1)
+            g_calc = round(info_al["g"] * factor, 1)
+            
+            nueva_comida = {
+                "fecha": dia_sel, "tiempo": tiempo_sel, "alimento": alimento_sel,
+                "cantidad": cant_sel, "calorias": c_calc, "proteina_g": p_calc,
+                "carbos_g": car_calc, "grasas_g": g_calc
+            }
+            df_comidas = pd.concat([df_comidas, pd.DataFrame([nueva_comida])], ignore_index=True)
+            df_comidas.to_csv(FILE_COMIDAS, index=False)
+            
+            # Actualizar resumen diario
+            sub_d = df_comidas[df_comidas["fecha"] == dia_sel]
+            res_dia = {
+                "fecha": dia_sel, "calorias": round(sub_d["calorias"].sum(), 1),
+                "proteina_g": round(sub_d["proteina_g"].sum(), 1),
+                "carbos_g": round(sub_d["carbos_g"].sum(), 1),
+                "grasas_g": round(sub_d["grasas_g"].sum(), 1)
+            }
+            df_diario = df_diario[df_diario["fecha"] != dia_sel]
+            df_diario = pd.concat([df_diario, pd.DataFrame([res_dia])], ignore_index=True).sort_values("fecha")
+            df_diario.to_csv(FILE_DIARIO, index=False)
+            st.rerun()
 
-    if st.session_state.comidas_temp:
-        df_temp = pd.DataFrame(st.session_state.comidas_temp)
-        st.dataframe(df_temp, use_container_width=True)
+    # Desglose del día por bloques
+    if not comidas_hoy.empty:
+        st.markdown("### 📋 Desglose del Día")
+        for bloque in ["Desayuno", "Almuerzo", "Merienda", "Cena", "Evento / Social"]:
+            b_items = comidas_hoy[comidas_hoy["tiempo"] == bloque]
+            if not b_items.empty:
+                b_cal = round(b_items["calorias"].sum(), 1)
+                b_prot = round(b_items["proteina_g"].sum(), 1)
+                with st.expander(f"**{bloque}** — {b_cal} kcal | {b_prot} g Proteína", expanded=True):
+                    st.dataframe(b_items[["alimento", "cantidad", "calorias", "proteina_g", "carbos_g", "grasas_g"]], use_container_width=True)
         
-        tot_c = round(df_temp["cal"].sum(), 1)
-        tot_p = round(df_temp["p"].sum(), 1)
-        tot_car = round(df_temp["c"].sum(), 1)
-        tot_g = round(df_temp["g"].sum(), 1)
+        if st.button("🗑️ Borrar todos los registros de esta fecha"):
+            df_comidas = df_comidas[df_comidas["fecha"] != dia_sel]
+            df_comidas.to_csv(FILE_COMIDAS, index=False)
+            df_diario = df_diario[df_diario["fecha"] != dia_sel]
+            df_diario.to_csv(FILE_DIARIO, index=False)
+            st.rerun()
 
-        m1, m2, m3, m4 = st.columns(4)
-        m1.metric("Calorías Totales", f"{tot_c} kcal", delta=f"{int(tot_c - 2000)} vs meta")
-        m2.metric("Proteína Total", f"{tot_p} g", delta=f"{int(tot_p - 140)} vs piso")
-        m3.metric("Carbohidratos", f"{tot_car} g")
-        m4.metric("Grasas", f"{tot_g} g")
-
-        b1, b2 = st.columns([2, 5])
-        with b1:
-            if st.button("💾 Guardar Día Nutricional"):
-                nuevo_consumo = {
-                    "fecha": fecha_comida,
-                    "calorias": tot_c,
-                    "proteina_g": tot_p,
-                    "carbos_g": tot_car,
-                    "grasas_g": tot_g
-                }
-                df_cons = df_cons[df_cons["fecha"] != fecha_comida]
-                df_cons = pd.concat([df_cons, pd.DataFrame([nuevo_consumo])], ignore_index=True).sort_values("fecha")
-                df_cons.to_csv(FILE_CONSUMO, index=False)
-                st.session_state.comidas_temp = []
-                st.success("Día registrado con éxito.")
-                st.rerun()
-        with b2:
-            if st.button("🗑️ Borrar lista"):
-                st.session_state.comidas_temp = []
-                st.rerun()
-
-with tab_graf:
+# --- TAB 2: GRÁFICOS Y ANÁLISIS ---
+with tab_graficos:
     if not df_hist.empty:
+        df_h = df_hist.sort_values("fecha").copy()
+        
+        st.subheader("1. Evolución del Peso & IMC")
+        df_h["ma_peso"] = df_h["peso_kg"].rolling(window=3, min_periods=1).mean()
+        
+        fig1 = go.Figure()
+        fig1.add_trace(go.Scatter(x=df_h["fecha"], y=df_h["peso_kg"], mode="lines+markers", name="Peso real (kg)", line=dict(color="#42a5f5", width=2)))
+        fig1.add_trace(go.Scatter(x=df_h["fecha"], y=df_h["ma_peso"], mode="lines", name="Tendencia Suavizada", line=dict(color="#1565c0", width=3)))
+        fig1.add_trace(go.Scatter(x=df_h["fecha"], y=df_h["imc"], mode="lines+markers", name="IMC", yaxis="y2", line=dict(color="#ab47bc", dash="dot")))
+        
+        fig1.update_layout(
+            height=380, hovermode="x unified",
+            yaxis=dict(title="Peso (kg)"),
+            yaxis2=dict(title="IMC", overlaying="y", side="right"),
+            margin=dict(l=10, r=10, t=30, b=20)
+        )
+        st.plotly_chart(fig1, use_container_width=True)
+        
         col_g1, col_g2 = st.columns(2)
         with col_g1:
-            st.subheader("Peso y Media Móvil (7 días)")
-            df_h_plot = df_hist.sort_values("fecha").copy()
-            df_h_plot["ma7"] = df_h_plot["peso_kg"].rolling(7, min_periods=1).mean()
+            st.subheader("2. Porcentajes (%) Grasa vs Músculo")
+            fig2 = go.Figure()
+            if "grasa_pct" in df_h.columns:
+                fig2.add_trace(go.Scatter(x=df_h["fecha"], y=df_h["grasa_pct"], name="% Grasa", line=dict(color="#ef5350", width=2)))
+            if "musculo_pct" in df_h.columns:
+                fig2.add_trace(go.Scatter(x=df_h["fecha"], y=df_h["musculo_pct"], name="% Músculo", line=dict(color="#66bb6a", width=2)))
+            fig2.update_layout(height=340, yaxis_title="Porcentaje (%)", margin=dict(l=10, r=10, t=30, b=20))
+            st.plotly_chart(fig2, use_container_width=True)
             
-            fig_p = go.Figure()
-            fig_p.add_trace(go.Scatter(x=df_h_plot["fecha"], y=df_h_plot["peso_kg"], mode="markers+lines", name="Peso real", line=dict(color="#64b5f6")))
-            fig_p.add_trace(go.Scatter(x=df_h_plot["fecha"], y=df_h_plot["ma7"], mode="lines", name="Tendencia 7d", line=dict(color="#0d47a1", width=3)))
-            fig_p.update_layout(height=350, yaxis_title="kg", margin=dict(l=20, r=20, t=30, b=20))
-            st.plotly_chart(fig_p, use_container_width=True)
-
         with col_g2:
-            st.subheader("% Grasa vs Músculo (kg)")
-            fig_comp = go.Figure()
-            if "grasa_pct" in df_h_plot.columns and df_h_plot["grasa_pct"].notna().any():
-                fig_comp.add_trace(go.Scatter(x=df_h_plot["fecha"], y=df_h_plot["grasa_pct"], name="% Grasa", line=dict(color="#e53935")))
-            if "musculo_kg" in df_h_plot.columns and df_h_plot["musculo_kg"].notna().any():
-                fig_comp.add_trace(go.Scatter(x=df_h_plot["fecha"], y=df_h_plot["musculo_kg"], name="Músculo (kg)", line=dict(color="#43a047"), yaxis="y2"))
-            
-            fig_comp.update_layout(
-                height=350,
-                yaxis=dict(title="% Grasa", titlefont=dict(color="#e53935")),
-                yaxis2=dict(title="Músculo (kg)", titlefont=dict(color="#43a047"), overlaying="y", side="right"),
-                margin=dict(l=20, r=20, t=30, b=20)
-            )
-            st.plotly_chart(fig_comp, use_container_width=True)
+            st.subheader("3. Kilos Netos: Grasa (kg) vs Músculo (kg)")
+            fig3 = go.Figure()
+            if "kg_grasa" in df_h.columns and df_h["kg_grasa"].notna().any():
+                fig3.add_trace(go.Bar(x=df_h["fecha"], y=df_h["kg_grasa"], name="Kg de Grasa", marker_color="#ff7043"))
+            if "kg_musculo" in df_h.columns and df_h["kg_musculo"].notna().any():
+                fig3.add_trace(go.Bar(x=df_h["fecha"], y=df_h["kg_musculo"], name="Kg de Músculo", marker_color="#42b883"))
+            fig3.update_layout(height=340, barmode="group", yaxis_title="Kilos (kg)", margin=dict(l=10, r=10, t=30, b=20))
+            st.plotly_chart(fig3, use_container_width=True)
 
-    if not df_cons.empty:
-        st.subheader("Calorías Consumidas vs Rango Objetivo")
-        df_c_plot = df_cons.sort_values("fecha")
-        fig_cal = go.Figure()
-        fig_cal.add_trace(go.Bar(x=df_c_plot["fecha"], y=df_c_plot["calorias"], name="Calorías consumidas", marker_color="#ffb74d"))
-        fig_cal.add_hline(y=1950, line_dash="dash", line_color="green", annotation_text="Piso (1.950 kcal)")
-        fig_cal.add_hline(y=2050, line_dash="dash", line_color="red", annotation_text="Techo (2.050 kcal)")
-        fig_cal.update_layout(height=320, margin=dict(l=20, r=20, t=30, b=20))
-        st.plotly_chart(fig_cal, use_container_width=True)
+    if not df_diario.empty:
+        st.subheader("4. Consumo Calórico Diario vs Ventana Objetivo")
+        df_d = df_diario.sort_values("fecha")
+        fig4 = go.Figure()
+        fig4.add_trace(go.Bar(x=df_d["fecha"], y=df_d["calorias"], name="Calorías consumidas", marker_color="#ffa726"))
+        fig4.add_hline(y=CAL_MIN, line_dash="dash", line_color="green", annotation_text="Piso 1.950 kcal")
+        fig4.add_hline(y=CAL_MAX, line_dash="dash", line_color="red", annotation_text="Techo 2.050 kcal")
+        fig4.update_layout(height=320, yaxis_title="kcal", margin=dict(l=10, r=10, t=30, b=20))
+        st.plotly_chart(fig4, use_container_width=True)
 
-with tab_datos:
-    st.subheader("Historial Corporal Registrado")
+# --- TAB 3: TABLAS HISTÓRICAS ---
+with tab_tablas:
+    st.subheader("Historial Corporal (Peso, Grasa, Músculo e IMC)")
     st.dataframe(df_hist.sort_values("fecha", ascending=False), use_container_width=True)
-    st.subheader("Historial Nutricional Diario")
-    st.dataframe(df_cons.sort_values("fecha", ascending=False), use_container_width=True)
+    st.subheader("Historial Nutricional Diario Consolidado")
+    st.dataframe(df_diario.sort_values("fecha", ascending=False), use_container_width=True)
