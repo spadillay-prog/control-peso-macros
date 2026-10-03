@@ -226,24 +226,83 @@ with tab_diario:
             df_diario.to_csv(FILE_DIARIO, index=False)
             st.rerun()
 
-    # Desglose del día por bloques
+# Desglose del día por bloques con edición interactiva y eliminación
     if not comidas_hoy.empty:
         st.markdown("### 📋 Desglose del Día")
-        for bloque in ["Desayuno", "Almuerzo", "Merienda", "Cena", "Evento / Social"]:
-            b_items = comidas_hoy[comidas_hoy["tiempo"] == bloque]
-            if not b_items.empty:
-                b_cal = round(b_items["calorias"].sum(), 1)
-                b_prot = round(b_items["proteina_g"].sum(), 1)
-                with st.expander(f"**{bloque}** — {b_cal} kcal | {b_prot} g Proteína", expanded=True):
-                    st.dataframe(b_items[["alimento", "cantidad", "calorias", "proteina_g", "carbos_g", "grasas_g"]], use_container_width=True)
+        st.caption("💡 Puedes editar la cantidad directamente en la casilla o marcar la casilla de la izquierda y presionar la tecla Supr/Delete para eliminar un alimento.")
         
-        if st.button("🗑️ Borrar todos los registros de esta fecha"):
-            df_comidas = df_comidas[df_comidas["fecha"] != dia_sel]
-            df_comidas.to_csv(FILE_COMIDAS, index=False)
-            df_diario = df_diario[df_diario["fecha"] != dia_sel]
-            df_diario.to_csv(FILE_DIARIO, index=False)
-            st.rerun()
+        # Tabla editable interactiva
+        cols_mostrar = ["tiempo", "alimento", "cantidad", "calorias", "proteina_g", "carbos_g", "grasas_g"]
+        comidas_editables = comidas_hoy[cols_mostrar].copy()
+        
+        df_editado = st.data_editor(
+            comidas_editables,
+            column_config={
+                "tiempo": st.column_config.SelectboxColumn("Momento", options=["Desayuno", "Almuerzo", "Merienda", "Cena", "Evento / Social"], required=True),
+                "alimento": st.column_config.TextColumn("Alimento", disabled=True),
+                "cantidad": st.column_config.NumberColumn("Cantidad", min_value=0.1, step=1.0, required=True),
+                "calorias": st.column_config.NumberColumn("Calorías", disabled=True),
+                "proteina_g": st.column_config.NumberColumn("Proteína", disabled=True),
+                "carbos_g": st.column_config.NumberColumn("Carbos", disabled=True),
+                "grasas_g": st.column_config.NumberColumn("Grasas", disabled=True),
+            },
+            num_rows="dynamic",
+            use_container_width=True,
+            key="editor_comidas"
+        )
+        
+        c_ed1, c_ed2 = st.columns([3, 4])
+        with c_ed1:
+            if st.button("🔄 Aplicar Cambios / Recalcular", use_container_width=True):
+                # Recalcular macros según los nuevos valores de cantidad ingresados
+                nuevas_filas = []
+                for _, row in df_editado.iterrows():
+                    alim = row["alimento"]
+                    if alim in CATALOGO:
+                        info = CATALOGO[alim]
+                        cant = float(row["cantidad"])
+                        factor = cant if info["tipo"] == "u" else (cant / 100.0 if info.get("div100") else cant)
+                        nuevas_filas.append({
+                            "fecha": dia_sel,
+                            "tiempo": row["tiempo"],
+                            "alimento": alim,
+                            "cantidad": cant,
+                            "calorias": round(info["cal"] * factor, 1),
+                            "proteina_g": round(info["p"] * factor, 1),
+                            "carbos_g": round(info["c"] * factor, 1),
+                            "grasas_g": round(info["g"] * factor, 1),
+                        })
+                
+                # Reemplazar en la base de datos completa
+                df_comidas = df_comidas[df_comidas["fecha"] != dia_sel]
+                if nuevas_filas:
+                    df_comidas = pd.concat([df_comidas, pd.DataFrame(nuevas_filas)], ignore_index=True)
+                df_comidas.to_csv(FILE_COMIDAS, index=False)
+                
+                # Actualizar resumen diario
+                df_diario = df_diario[df_diario["fecha"] != dia_sel]
+                if nuevas_filas:
+                    df_sub = pd.DataFrame(nuevas_filas)
+                    res_dia = {
+                        "fecha": dia_sel,
+                        "calorias": round(df_sub["calorias"].sum(), 1),
+                        "proteina_g": round(df_sub["proteina_g"].sum(), 1),
+                        "carbos_g": round(df_sub["carbos_g"].sum(), 1),
+                        "grasas_g": round(df_sub["grasas_g"].sum(), 1)
+                    }
+                    df_diario = pd.concat([df_diario, pd.DataFrame([res_dia])], ignore_index=True).sort_values("fecha")
+                df_diario.to_csv(FILE_DIARIO, index=False)
+                
+                st.success("¡Datos actualizados y macros recalculados!")
+                st.rerun()
 
+        with c_ed2:
+            if st.button("🗑️ Borrar todo el día"):
+                df_comidas = df_comidas[df_comidas["fecha"] != dia_sel]
+                df_comidas.to_csv(FILE_COMIDAS, index=False)
+                df_diario = df_diario[df_diario["fecha"] != dia_sel]
+                df_diario.to_csv(FILE_DIARIO, index=False)
+                st.rerun()
 # --- TAB 2: GRÁFICOS Y ANÁLISIS ---
 with tab_graficos:
     if not df_hist.empty:
