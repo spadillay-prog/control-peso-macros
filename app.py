@@ -69,6 +69,7 @@ CATALOGO = {
     "Kiwi (u mediana ~75g)": {"tipo": "u", "cal": 42.0, "p": 0.8, "c": 10.1, "g": 0.4},
     "Yoghurt Protein+ Sabor Natural (155g)": {"tipo": "u", "cal": 105.4, "p": 10.2, "c": 9.8, "g": 2.8},
     "Linaza molida": {"tipo": "g", "cal": 5.34, "p": 0.183, "c": 0.02, "g": 0.422},
+    "Pino de soya casero cocinado": {"tipo": "g", "cal": 1.11, "p": 0.121, "c": 0.088, "g": 0.03},
     
     # Lácteos y Grasas Saludables
     "Leche descremada Colún (ml)": {"tipo": "g", "cal": 0.32, "p": 0.031, "c": 0.047, "g": 0.001},
