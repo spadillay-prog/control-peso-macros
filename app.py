@@ -68,7 +68,7 @@ CATALOGO = {
     "Mandarina (u mediana ~80g)": {"tipo": "u", "cal": 40.0, "p": 0.6, "c": 10.0, "g": 0.2},
     "Kiwi (u mediana ~75g)": {"tipo": "u", "cal": 42.0, "p": 0.8, "c": 10.1, "g": 0.4},
     "Yoghurt Protein+ Sabor Natural (155g)": {"tipo": "u", "cal": 105.4, "p": 10.2, "c": 9.8, "g": 2.8},
-    "Linaza molida": {"tipo": "g", "cal": 534.0, "p": 18.3, "c": 2.0, "g": 42.2},
+    "Linaza molida": {"tipo": "g", "cal": 5.34, "p": 0.183, "c": 0.02, "g": 0.422},
     
     # Lácteos y Grasas Saludables
     "Leche descremada Colún (ml)": {"tipo": "g", "cal": 0.32, "p": 0.031, "c": 0.047, "g": 0.001},
