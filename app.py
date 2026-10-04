@@ -87,6 +87,7 @@ CATALOGO = {
     
     # Antojos, Salidas y Eventos Sociales
     "Bombón Frac (u)": {"tipo": "u", "cal": 60.0, "p": 0.6, "c": 7.2, "g": 3.3},
+    "Empanada de pino casera al horno": {"tipo": "g", "cal": 2.35, "p": 0.085, "c": 0.24, "g": 0.11},
     "Cerveza rubia tradicional (lata/botella 350ml)": {"tipo": "u", "cal": 150.0, "p": 1.5, "c": 12.5, "g": 0.0},
     "Cerveza IPA o artesanal (copa/vaso 350ml)": {"tipo": "u", "cal": 210.0, "p": 2.0, "c": 18.0, "g": 0.0},
     "Cerveza Sin Alcohol (lata 350ml)": {"tipo": "u", "cal": 70.0, "p": 1.0, "c": 15.0, "g": 0.0},
