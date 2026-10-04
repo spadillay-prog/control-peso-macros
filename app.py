@@ -52,7 +52,7 @@ CATALOGO = {
     "Tilapia / Pescado blanco (g)": {"tipo": "g", "cal": 0.96, "p": 0.20, "c": 0.0, "g": 0.017},
     "Whey Protein QNT (g)": {"tipo": "g", "cal": 3.83, "p": 0.816, "c": 0.066, "g": 0.05},
     "Loncoleche Protein en polvo (g)": {"tipo": "g", "cal": 4.00, "p": 0.525, "c": 0.375, "g": 0.05},
-    "Atún Van Camps al agua (lata 92g drenado)": {"tipo": "u", "cal": 98.4, "p": 23.0, "c": 1.1, "g": 0.2},
+    "Atún Van Camps al agua (lata 104g drenado)": {"tipo": "u", "cal": 112, "p": 26.0, "c": 1.4, "g": 0.2},
     "Cacao amargo en polvo (g)": {"tipo": "g", "cal": 3.10, "p": 0.20, "c": 0.21, "g": 0.14},
     # Carbohidratos y Frutas
     "Avena integral (g)": {"tipo": "g", "cal": 3.75, "p": 0.13, "c": 0.60, "g": 0.07},
