@@ -62,6 +62,11 @@ CATALOGO = {
     "Manzana roja (u mediana ~150g)": {"tipo": "u", "cal": 78.0, "p": 0.4, "c": 20.7, "g": 0.3},
     "Frutos rojos / Berries (g)": {"tipo": "g", "cal": 0.50, "p": 0.01, "c": 0.11, "g": 0.004},
     "Plátano (u mediana ~100g)": {"tipo": "u", "cal": 89.0, "p": 1.1, "c": 22.8, "g": 0.3},
+    "Naranja (u mediana ~130g)": {"tipo": "u", "cal": 62.0, "p": 1.2, "c": 15.4, "g": 0.2},
+    "Pera (u mediana ~160g)": {"tipo": "u", "cal": 85.0, "p": 0.6, "c": 22.0, "g": 0.2},
+    "Frutillas (g)": {"tipo": "g", "cal": 0.33, "p": 0.007, "c": 0.077, "g": 0.003},
+    "Mandarina (u mediana ~80g)": {"tipo": "u", "cal": 40.0, "p": 0.6, "c": 10.0, "g": 0.2},
+    "Kiwi (u mediana ~75g)": {"tipo": "u", "cal": 42.0, "p": 0.8, "c": 10.1, "g": 0.4},
     
     # Lácteos y Grasas Saludables
     "Leche descremada Colún (ml)": {"tipo": "g", "cal": 0.32, "p": 0.031, "c": 0.047, "g": 0.001},
