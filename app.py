@@ -79,6 +79,12 @@ CATALOGO = {
     "Aceite de oliva / vegetal (cda ~10g)": {"tipo": "u", "cal": 88.0, "p": 0.0, "c": 0.0, "g": 10.0},
     "Aceite en spray (1 spray ~0.3ml)": {"tipo": "u", "cal": 2.7, "p": 0.0, "c": 0.0, "g": 0.3},
     "Palta (g)": {"tipo": "g", "cal": 1.60, "p": 0.02, "c": 0.085, "g": 0.147},
+
+    # Frutos Secos (por cada 1 gramo)
+    "Nueces": {"tipo": "g", "cal": 6.54, "p": 0.152, "c": 0.07, "g": 0.652},
+    "Almendras": {"tipo": "g", "cal": 5.79, "p": 0.212, "c": 0.09, "g": 0.499},
+    "Maní sin sal": {"tipo": "g", "cal": 5.67, "p": 0.258, "c": 0.16, "g": 0.492},
+    "Mix frutos secos tradicional": {"tipo": "g", "cal": 5.95, "p": 0.180, "c": 0.15, "g": 0.520},
     
     # Verduras / Extras
     "Alcachofa cocida (u mediana)": {"tipo": "u", "cal": 55.0, "p": 3.5, "c": 12.0, "g": 0.2},
