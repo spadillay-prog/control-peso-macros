@@ -94,6 +94,7 @@ CATALOGO = {
     "Pizza tradicional (1 porción/slice grande)": {"tipo": "u", "cal": 270.0, "p": 11.0, "c": 32.0, "g": 10.0},
     "Hamburguesa tradicional con queso (unidad)": {"tipo": "u", "cal": 550.0, "p": 28.0, "c": 40.0, "g": 31.0},
     "Papas fritas porción mediana (120g)": {"tipo": "u", "cal": 365.0, "p": 4.0, "c": 48.0, "g": 17.0}
+    "Empanada de pino casera al horno": {"tipo": "g", "cal": 2.35, "p": 0.085, "c": 0.24, "g": 0.11},
 }
 
 def init_df(filename, cols):
