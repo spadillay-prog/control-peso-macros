@@ -79,6 +79,7 @@ CATALOGO = {
     "Yogurt Oikos Griego Natural (pote 150g)": {"tipo": "u", "cal": 135.0, "p": 7.0, "c": 7.5, "g": 8.0},
     "Semillas de chía (g)": {"tipo": "g", "cal": 4.86, "p": 0.165, "c": 0.42, "g": 0.31},
     "Aceite de oliva / vegetal (cda ~10g)": {"tipo": "u", "cal": 88.0, "p": 0.0, "c": 0.0, "g": 10.0},
+    "Leche descremada en polvo Colún": {"tipo": "g", "cal": 3.53, "p": 0.35, "c": 0.52, "g": 0.005},
     "Aceite en spray (1 spray ~0.3ml)": {"tipo": "u", "cal": 2.7, "p": 0.0, "c": 0.0, "g": 0.3},
     "Palta (g)": {"tipo": "g", "cal": 1.60, "p": 0.02, "c": 0.085, "g": 0.147},
 
