@@ -70,6 +70,8 @@ CATALOGO = {
     "Mandarina (u mediana ~80g)": {"tipo": "u", "cal": 40.0, "p": 0.6, "c": 10.0, "g": 0.2},
     "Kiwi (u mediana ~75g)": {"tipo": "u", "cal": 42.0, "p": 0.8, "c": 10.1, "g": 0.4},
     "Yoghurt Protein+ Sabor Natural (155g)": {"tipo": "u", "cal": 105.4, "p": 10.2, "c": 9.8, "g": 2.8},
+    "Lentejas cocidas": {"tipo": "g", "cal": 1.16, "p": 0.090, "c": 0.165, "g": 0.004},
+    "Garbanzos cocidos": {"tipo": "g", "cal": 1.64, "p": 0.089, "c": 0.274, "g": 0.026},
     "Linaza molida": {"tipo": "g", "cal": 5.34, "p": 0.183, "c": 0.02, "g": 0.422},
        
     # Lácteos y Grasas Saludables
