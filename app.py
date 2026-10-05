@@ -54,6 +54,7 @@ CATALOGO = {
     "Yoghurt Nestlé Griego Natural (120g)": {"tipo": "u", "cal": 118.0, "p": 4.4, "c": 10.8, "g": 6.4},
     "Loncoleche Protein en polvo (g)": {"tipo": "g", "cal": 4.00, "p": 0.525, "c": 0.375, "g": 0.05},
     "Atún Van Camps al agua (lata 104g drenado)": {"tipo": "u", "cal": 112, "p": 26.0, "c": 1.4, "g": 0.2},
+    "Pino de soya casero cocinado": {"tipo": "g", "cal": 0.99, "p": 0.108, "c": 0.079, "g": 0.027},
     "Cacao amargo en polvo (g)": {"tipo": "g", "cal": 3.10, "p": 0.20, "c": 0.21, "g": 0.14},
     # Carbohidratos y Frutas
     "Avena integral (g)": {"tipo": "g", "cal": 3.75, "p": 0.13, "c": 0.60, "g": 0.07},
@@ -70,8 +71,7 @@ CATALOGO = {
     "Kiwi (u mediana ~75g)": {"tipo": "u", "cal": 42.0, "p": 0.8, "c": 10.1, "g": 0.4},
     "Yoghurt Protein+ Sabor Natural (155g)": {"tipo": "u", "cal": 105.4, "p": 10.2, "c": 9.8, "g": 2.8},
     "Linaza molida": {"tipo": "g", "cal": 5.34, "p": 0.183, "c": 0.02, "g": 0.422},
-    "Pino de soya casero cocinado": {"tipo": "g", "cal": 1.11, "p": 0.121, "c": 0.088, "g": 0.03},
-    
+       
     # Lácteos y Grasas Saludables
     "Leche descremada Colún (ml)": {"tipo": "g", "cal": 0.32, "p": 0.031, "c": 0.047, "g": 0.001},
     "Yogurt Oikos Griego Natural (pote 150g)": {"tipo": "u", "cal": 135.0, "p": 7.0, "c": 7.5, "g": 8.0},
