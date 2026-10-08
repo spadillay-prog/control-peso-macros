@@ -94,6 +94,7 @@ CATALOGO = {
    "Sopa espárragos sobre (1 taza / porción)": {"tipo": "u", "cal": 55.0, "p": 1.2, "c": 9.5, "g": 1.5},
     "Hojas verdes (lechuga, espinaca)": {"tipo": "u", "cal": 0.0, "p": 0.0, "c": 0.0, "g": 0.0},
     "Tomate": {"tipo": "g", "cal": 0.18, "p": 0.009, "c": 0.039, "g": 0.002},
+    "Espárragos cocidos": {"tipo": "g", "cal": 0.22, "p": 0.024, "c": 0.041, "g": 0.002},
     "Sopa de verduras casera": {"tipo": "g", "cal": 0.40, "p": 0.011, "c": 0.08, "g": 0.007},
     
     # Antojos, Salidas y Eventos Sociales
