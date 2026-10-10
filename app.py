@@ -50,6 +50,7 @@ CATALOGO = {
     "Huevo entero (u)": {"tipo": "u", "cal": 72.0, "p": 6.3, "c": 0.4, "g": 4.8},
     "Clara de huevo (u)": {"tipo": "u", "cal": 17.0, "p": 3.6, "c": 0.2, "g": 0.1},
     "Jurel al agua enlatado (g)": {"tipo": "g", "cal": 1.30, "p": 0.21, "c": 0.0, "g": 0.05},
+    "Filetes de jurel al natural San Jose (lata 80g drenada)": {"tipo": "u", "cal": 108.8, "p": 20.0, "c": 0.0, "g": 3.12},
     "Tilapia / Pescado blanco (g)": {"tipo": "g", "cal": 0.96, "p": 0.20, "c": 0.0, "g": 0.017},
     "Whey Protein QNT (g)": {"tipo": "g", "cal": 3.83, "p": 0.816, "c": 0.066, "g": 0.05},
     "Yoghurt Nestlé Griego Natural (120g)": {"tipo": "u", "cal": 118.0, "p": 4.4, "c": 10.8, "g": 6.4},
