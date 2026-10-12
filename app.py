@@ -52,6 +52,8 @@ CATALOGO = {
     "Jurel al agua enlatado (g)": {"tipo": "g", "cal": 1.30, "p": 0.21, "c": 0.0, "g": 0.05},
     "Filetes de jurel al natural San Jose (lata 80g drenada)": {"tipo": "u", "cal": 108.8, "p": 20.0, "c": 0.0, "g": 3.12},
     "Tilapia / Pescado blanco (g)": {"tipo": "g", "cal": 0.96, "p": 0.20, "c": 0.0, "g": 0.017},
+    "Merluza frita": {"tipo": "g", "cal": 2.10, "p": 0.15, "c": 0.09, "g": 0.12},
+    "Reineta frita": {"tipo": "g", "cal": 2.20, "p": 0.16, "c": 0.09, "g": 0.13},
     "Whey Protein QNT (g)": {"tipo": "g", "cal": 3.83, "p": 0.816, "c": 0.066, "g": 0.05},
     "Yoghurt Nestlé Griego Natural (120g)": {"tipo": "u", "cal": 118.0, "p": 4.4, "c": 10.8, "g": 6.4},
     "Yoghurt Colun Origen Natural (1 un)": {"tipo": "u", "cal": 128.0, "p": 5.0, "c": 8.0, "g": 8.4},
