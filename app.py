@@ -57,6 +57,7 @@ CATALOGO = {
     "Whey Protein QNT (g)": {"tipo": "g", "cal": 3.83, "p": 0.816, "c": 0.066, "g": 0.05},
     "Yoghurt Nestlé Griego Natural (120g)": {"tipo": "u", "cal": 118.0, "p": 4.4, "c": 10.8, "g": 6.4},
     "Yoghurt Colun Origen Natural (1 un)": {"tipo": "u", "cal": 128.0, "p": 5.0, "c": 8.0, "g": 8.4},
+    "Yoghurt Soprole Protein Vainilla": {"tipo": "u", "cal": 105.0, "p": 10.2, "c": 9.8, "g": 2.8},
     "Yoghurt Colun Light Frutilla (1 un)": {"tipo": "u", "cal": 65.0, "p": 5.6, "c": 9.6, "g": 0.45},
     "Loncoleche Protein en polvo (g)": {"tipo": "g", "cal": 4.00, "p": 0.525, "c": 0.375, "g": 0.05},
     "Atún Van Camps al agua (lata 104g drenado)": {"tipo": "u", "cal": 112, "p": 26.0, "c": 1.4, "g": 0.2},
