@@ -68,6 +68,7 @@ CATALOGO = {
     "Pan integral (g)": {"tipo": "g", "cal": 2.50, "p": 0.09, "c": 0.45, "g": 0.03},
     "Arroz cocido (g)": {"tipo": "g", "cal": 1.30, "p": 0.027, "c": 0.28, "g": 0.003},
     "Papas cocidas (g)": {"tipo": "g", "cal": 0.87, "p": 0.02, "c": 0.201, "g": 0.001},
+    "Arvejas cocidas (g)": {"tipo": "g", "cal": 0.74, "p": 0.048, "c": 0.128, "g": 0.004},
     "Manzana roja (u mediana ~150g)": {"tipo": "u", "cal": 78.0, "p": 0.4, "c": 20.7, "g": 0.3},
     "Frutos rojos / Berries (g)": {"tipo": "g", "cal": 0.50, "p": 0.01, "c": 0.11, "g": 0.004},
     "Plátano (u mediana ~100g)": {"tipo": "u", "cal": 89.0, "p": 1.1, "c": 22.8, "g": 0.3},
