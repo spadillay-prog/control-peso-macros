@@ -76,6 +76,7 @@ CATALOGO = {
     "Naranja (u mediana ~130g)": {"tipo": "u", "cal": 62.0, "p": 1.2, "c": 15.4, "g": 0.2},
     "Pera (u mediana ~160g)": {"tipo": "u", "cal": 85.0, "p": 0.6, "c": 22.0, "g": 0.2},
     "Frutillas (g)": {"tipo": "g", "cal": 0.33, "p": 0.007, "c": 0.077, "g": 0.003},
+    "Arándanos (g)": {"tipo": "g", "cal": 0.57, "p": 0.007, "c": 0.145, "g": 0.003},
     "Mandarina (u mediana ~80g)": {"tipo": "u", "cal": 40.0, "p": 0.6, "c": 10.0, "g": 0.2},
     "Kiwi (u mediana ~75g)": {"tipo": "u", "cal": 42.0, "p": 0.8, "c": 10.1, "g": 0.4},
     "Yoghurt Protein+ Sabor Natural (155g)": {"tipo": "u", "cal": 105.4, "p": 10.2, "c": 9.8, "g": 2.8},
