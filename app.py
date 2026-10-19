@@ -116,6 +116,7 @@ CATALOGO = {
     "Cerveza IPA o artesanal (copa/vaso 350ml)": {"tipo": "u", "cal": 210.0, "p": 2.0, "c": 18.0, "g": 0.0},
     "Cerveza Sin Alcohol (lata 350ml)": {"tipo": "u", "cal": 70.0, "p": 1.0, "c": 15.0, "g": 0.0},
     "Vino tinto (copa 150ml)": {"tipo": "u", "cal": 125.0, "p": 0.1, "c": 3.8, "g": 0.0},
+    "Pie de limón casero (g)": {"tipo": "g", "cal": 2.85, "p": 0.048, "c": 0.440, "g": 0.102},
     "Sopaipilla air fryer": {"tipo": "g", "cal": 2.15, "p": 0.045, "c": 0.34, "g": 0.065},
     "Pizza tradicional (1 porción/slice grande)": {"tipo": "u", "cal": 270.0, "p": 11.0, "c": 32.0, "g": 10.0},
     "Hamburguesa tradicional con queso (unidad)": {"tipo": "u", "cal": 550.0, "p": 28.0, "c": 40.0, "g": 31.0},
