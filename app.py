@@ -56,6 +56,7 @@ CATALOGO = {
     "Reineta frita": {"tipo": "g", "cal": 2.20, "p": 0.16, "c": 0.09, "g": 0.13},
     "Whey Protein QNT (g)": {"tipo": "g", "cal": 3.83, "p": 0.816, "c": 0.066, "g": 0.05},
     "Yoghurt Nestlé Griego Natural (120g)": {"tipo": "u", "cal": 118.0, "p": 4.4, "c": 10.8, "g": 6.4},
+    "Guiso arroz integral mariscos (olla total)": {"tipo": "u", "cal": 1176.0, "p": 87.4, "c": 161.5, "g": 22.5},
     "Yoghurt Colun Origen Natural (1 un)": {"tipo": "u", "cal": 128.0, "p": 5.0, "c": 8.0, "g": 8.4},
     "Yogurt Quillayes Griego Protein (g)": {"tipo": "g", "cal": 0.74, "p": 0.095, "c": 0.035, "g": 0.025},
     "Yoghurt Soprole Protein Vainilla": {"tipo": "u", "cal": 105.0, "p": 10.2, "c": 9.8, "g": 2.8},
